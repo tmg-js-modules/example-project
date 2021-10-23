@@ -1,0 +1,28 @@
+{
+  "name": "js-project-template",
+  "version": "1.0.0",
+  "description": "A blank javascript project template.",
+  "main": "capacitor.js",
+  "keywords": [
+    "capacitor",
+    "mobile"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-js": "esbuild dev/js/index.js --bundle --outfile=www/js/index.js",
+    "build--css": "esbuild dev/css/style.css --bundle --outfile=www/css/style.css",
+    "build": "npm run build-js && npm run build--css"
+  },
+  "dependencies": {
+    "@capacitor/android": "^3.2.5",
+    "@capacitor/camera": "latest",
+    "@capacitor/core": "^3.2.5",
+    "@capacitor/splash-screen": "latest"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^3.2.5",
+    "esbuild": "^0.13.8"
+  },
+  "author": "",
+  "license": "ISC"
+}

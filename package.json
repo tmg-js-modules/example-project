@@ -21,7 +21,7 @@
     "auto-run": "npm run build && npm start",
     "check-imgs": "cpx-fixed \"dev/img/**\" \"www/img/\" --verbose --watch",
     "dev-run": "start npm run check-imgs && start esbuild dev/js/index.js --bundle --outfile=www/js/index.js --sourcemap --bundle --watch",
-    "git-init": "git init && git add . && git commit -m \"Update Example-Template Project\"",
+    "git-init": "git init && git add . && git commit -m \"Update Example-Template Project\" && git push -u origin main",
     "git-push": "git add . && git commit -m `Update Example-Template Project` && git push -u origin main"
   },
   "dependencies": {

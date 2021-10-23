@@ -1,14 +1,14 @@
 // Screen Resize
-import { screen_init } from './modules/screen_manager.js';
-
-// Input Manager
-import { mouse_move, mouse_leave } from './modules/input_manager.js';
+// import { screen_init } from './modules/screen_manager.js';
 
 // Map Array
 import { Gear_01, Gear_02, Gear_03 } from './modules/example.js';
 
-// Draw Manager
-import { draw_text, draw_box, draw_bevel_outline, draw_image } from './modules/draw_manager.js';
+const Loader = require('@tmg-js-modules/image-loader');
+const Graphics = require('@tmg-js-modules/graphics');
+const Collider = require('@tmg-js-modules/colliders');
+const Mouse = require('@tmg-js-modules/input-mouse');
+const Screen = require( '@tmg-js-modules/screen' );
 
 window.addEventListener('load', function(){
 
@@ -19,16 +19,21 @@ window.addEventListener('load', function(){
     class Game {
         constructor(size){
             this.debug = false;
-            this.canvas = canvas;
-            this.ctx = ctx;
-            this.overlay = overlay;
-            this.overlayCtx = overlayCtx;
+            this.resolution = {w: 1088, h: 640};
+            // this.canvas = canvas;
+            // this.ctx = ctx;
+            // this.overlay = overlay;
+            // this.overlayCtx = overlayCtx;
             this.size = size;
             this.timeStamp = 1;
 
+            this.images = {
+                gear_icon: Loader.Load_Image('img/gear.png'),
+            }
+
             this.canvas_list = [
-                {cx:ctx, ca:canvas}, 
-                {cx:overlayCtx, ca:overlay}
+                {cx: ctx, ca: canvas}, 
+                {cx: overlayCtx, ca: overlay}
             ];
 
             this.mouse = {
@@ -43,19 +48,23 @@ window.addEventListener('load', function(){
         init(){
             if (this.debug) console.log("Game Started");
 
-            // for (let x = 0; x < 16; ++x){
-            //     for (let y = 0; y < 9; ++y){
-            //         this.instance(this.objects, Gear_03, {x:64+64*x, y:64+64*y}, {w:64, h:64}, 0.4);
+            const size = 32;
+            let speed = 0.4;
+
+            // for (let x = 0; x < 17*2; ++x){
+            //     for (let y = 0; y < 10*2; ++y){
+            //         this.instance(this.objects, Gear_03, {x:0+size*x, y:0+size*y}, {w:size, h:size}, speed);
+            //         speed = -speed;
             //     }
             // }
 
-            const gears_offset = {x:64, y:-70};
+            const gears_offset = {x:-15, y:-190};
 
             // Add Gear 1
-            this.instance(this.objects, Gear_01, {x:canvas.width*0.5+gears_offset.x, y:canvas.height*0.5+64+gears_offset.y}, {w:180, h:180}, 0.4);
+            this.instance(this.objects, Gear_01, {x:canvas.width*0.5-11+gears_offset.x, y:canvas.height*0.5-15+64+gears_offset.y}, {w:180, h:180}, 0.4);
 
             // Add Gear 2
-            this.instance(this.objects, Gear_02, {x:canvas.width*0.5-140+gears_offset.x, y:canvas.height*0.5+140+gears_offset.y}, {w:160, h:160}, -0.4);
+            this.instance(this.objects, Gear_02, {x:canvas.width*0.5-140+gears_offset.x, y:canvas.height*0.5+130+gears_offset.y}, {w:160, h:160}, -0.4);
 
             // Add Gear 3
             this.instance(this.objects, Gear_03, {x:canvas.width*0.5-35+gears_offset.x, y:canvas.height*0.5+240+gears_offset.y}, {w:140, h:140}, 0.4);
@@ -67,22 +76,23 @@ window.addEventListener('load', function(){
         }
 
         draw(){
+
+            // Show guide lines
+            // Graphics.Line_Guides(ctx, 2, {x:2, y: 2}, { x: 64*3, y: 64*3 });
+
             // Draw Objects
             this.objects.forEach(ob => ob.draw());
 
-            // Draw Text
-            draw_text(ctx, "Blank JS Project", 'Noto Sans', 40, "center", 'Gold', 1, {x:canvas.width*0.5, y:canvas.height*0.5-168});
+            // Draw Title Text
+            Graphics.Text(ctx, "Example JS Project", 'center', 'Noto Sans', {x:canvas.width*0.5, y:canvas.height*0.5-168}, 32, 'Gold', 1);
 
             // Show Mouse Position
-            if (game.debug) {
-                if (this.mouse.pos.x || this.mouse.pos.y) {
-                    draw_box(overlayCtx, {w:this.mouse.size.w, h:this.mouse.size.h}, 
-                        'Teal', 1, {x:this.mouse.pos.x-this.mouse.size.w*0.5, y:this.mouse.pos.y-this.mouse.size.h*0.5});
-                }
+            if (game.debug && ( game.mouse.pos.x || game.mouse.pos.y) ) {
+                Graphics.Bevel_Outline(overlayCtx, this.mouse.pos, this.mouse.size, 'Red', 3, 1);
             }
         }
 
-        instance(_list, _ob, _pos, _size, _speed){
+        instance(_list, _ob, _pos, _size, _speed) {
             if (_ob !== null){
                 _list.push(new _ob(this, _pos, _size, _speed));
                 _list[_list.length-1].init();
@@ -101,8 +111,9 @@ window.addEventListener('load', function(){
 
 
     // Update loop ---------------------------------------
-    const game = new Game({w:canvas.width, h:canvas.height});
-    screen_init(game);
+    const game = new Game( {w:canvas.width, h:canvas.height} );
+    Loader.Image_Init(game.images);
+    Screen.Init(game);
     game.init();
 
     document.addEventListener("touchstart", touch2Mouse, true);
@@ -133,9 +144,10 @@ window.addEventListener('load', function(){
     // e.preventDefault();
     }
 
-    // Input Events
-    mouse_move(game);
-    mouse_leave(game);
+    Mouse.Mouse_Move(game, canvas);
+    Mouse.Mouse_Leave(game);
+    Mouse.Mouse_Down(game);
+    Mouse.Mouse_Up(game);
 
     let lastTime = 1;
     function animate(timeStamp) {

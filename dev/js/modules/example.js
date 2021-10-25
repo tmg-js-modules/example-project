@@ -1,9 +1,6 @@
 // Draw Manager
 const Graphic = require('@tmg-js-modules/graphics');
 const Collider = require('@tmg-js-modules/colliders');
-const Loader = require('@tmg-js-modules/image-loader');
-
-console.log("Hi");
 
 // Towers
 export class Example {

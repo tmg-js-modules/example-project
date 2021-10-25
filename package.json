@@ -32,11 +32,11 @@
     "@tmg-js-modules/colliders": "github:tmg-js-modules/colliders",
     "@tmg-js-modules/graphics": "github:tmg-js-modules/graphics",
     "@tmg-js-modules/image-loader": "github:tmg-js-modules/image-loader",
-    "@tmg-js-modules/input-mouse": "github:tmg-js-modules/input-mouse"
+    "@tmg-js-modules/input-mouse": "github:tmg-js-modules/input-mouse",
+    "@tmg-js-modules/touch": "github:tmg-js-modules/touch"
   },
   "devDependencies": {
     "@capacitor/cli": "^3.2.5",
-    "@tmg-js-modules/screen": "github:tmg-js-modules/screen",
     "cpx-fixed": "^1.6.0",
     "esbuild": "^0.13.8"
   },

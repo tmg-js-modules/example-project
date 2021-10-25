@@ -1,6 +1,3 @@
-// Screen Resize
-// import { screen_init } from './modules/screen_manager.js';
-
 // Map Array
 import { Gear_01, Gear_02, Gear_03 } from './modules/example.js';
 
@@ -8,6 +5,7 @@ const Loader = require('@tmg-js-modules/image-loader');
 const Graphics = require('@tmg-js-modules/graphics');
 const Collider = require('@tmg-js-modules/colliders');
 const Mouse = require('@tmg-js-modules/input-mouse');
+const Touch = require( '@tmg-js-modules/touch' );
 const Screen = require( '@tmg-js-modules/screen' );
 
 window.addEventListener('load', function(){
@@ -28,7 +26,7 @@ window.addEventListener('load', function(){
             this.timeStamp = 1;
 
             this.images = {
-                gear_icon: Loader.Load_Image('img/gear.png'),
+                gear_icon: Loader.Load('img/gear.png'),
             }
 
             this.canvas_list = [
@@ -112,42 +110,15 @@ window.addEventListener('load', function(){
 
     // Update loop ---------------------------------------
     const game = new Game( {w:canvas.width, h:canvas.height} );
-    Loader.Image_Init(game.images);
+    Loader.Init(game.images);
     Screen.Init(game);
     game.init();
 
-    document.addEventListener("touchstart", touch2Mouse, true);
-    document.addEventListener("touchmove", touch2Mouse, true);
-    document.addEventListener("touchend", touch2Mouse, true);
-
-    function touch2Mouse(e) {
-    let theTouch = e.changedTouches[0];
-    let mouseEv;
-
-    switch(e.type)
-    {
-        case "touchstart": 
-            mouseEv="mousedown";
-            game.click = true; 
-            break;  
-        case "touchend":   mouseEv="mouseup";
-            game.click = false; 
-            break;  
-        case "touchmove":  mouseEv="mousemove"; break;
-        default: return;
-    }
-
-    const mouseEvent = document.createEvent("MouseEvent");
-    mouseEvent.initMouseEvent(mouseEv, true, true, window, 1, theTouch.screenX, theTouch.screenY, theTouch.clientX, theTouch.clientY, false, false, false, false, 0, null);
-    theTouch.target.dispatchEvent(mouseEvent);
-
-    // e.preventDefault();
-    }
-
-    Mouse.Mouse_Move(game, canvas);
-    Mouse.Mouse_Leave(game);
-    Mouse.Mouse_Down(game);
-    Mouse.Mouse_Up(game);
+    Mouse.Move(game, canvas);
+    Mouse.Leave(game);
+    Mouse.Down(game);
+    Mouse.Up(game);
+    Touch.Init(game);
 
     let lastTime = 1;
     function animate(timeStamp) {
